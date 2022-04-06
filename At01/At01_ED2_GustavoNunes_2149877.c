@@ -2,19 +2,65 @@
 #include <stdlib.h>
 #include <time.h>
 
+//*************************************
+//        Funçoes auxiliares
+//*************************************
+//Cria numeros aleatorios
 int RandomInteger(int low, int high)
 {
     int k;
     k = (rand() % high) + low;
     return k;
 }
-
+//Faz atroca de posição em um vetor
 void troca(int *a, int *b)
 {
     int aux;
     aux = *a;
     *a = *b;
     *b = aux;
+}
+// Gera um vetor
+void geraVetor(int *V,int tam,char tipoVetor){
+    
+    int i,auxD = 0;
+    // Define o tipo de vetor a ser criado
+    switch (tipoVetor)
+    {
+    case 'c': // gera o vetor de forma crescente
+        for (i = 0; i < tam; i++)
+        {
+            V[i] = i + 1;
+        }
+
+        break;
+    case 'd': // gera o vetor de forma decrescente
+        for (i = tam; i > 0; i--)
+        {
+            V[auxD] = i;
+            auxD++;
+        }
+
+        break;
+    case 'r': // gera o vetor de forma randomica
+
+        for (i = 0; i < tam; i++)
+        {
+            V[i] = RandomInteger(0, 3200);
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+// imprime o vetor organizado com o tempo
+void imprimeTimeVetor(int *v,int tam,clock_t t){
+    for (int i = 0; i < tam; i++)
+    {
+        printf("[%d] ", v[i]);
+    }
+    printf("\nTempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));
 }
 //*************************************
 //            InsertionSort
@@ -170,57 +216,49 @@ void quickSort(){}
 int main()
 {
     int *vetor;
-    int i,n ;
+    int i, n, auxD = 0;
     char tipoVetor ;
     clock_t t;
 
+    printf("Tipo do vetor:\nc - crescente\nd - decrescente\nr - randomico\n ");
+    scanf("%s", &tipoVetor);
     printf("Digite o tamanho do vetor : ");
     scanf("%d", &n);
-    printf("Tipo do vetor:\nc - crescente\nd - decrescente\nr - randomico\n ");
-    scanf("%s",&tipoVetor);
-    tipoVetor = 'c';
-    switch (tipoVetor)
-    {
-    case 'c'://gera o vetor de forma crescente
-        for ( i = 0; i < n; i++)
-        {
-            vetor[i] = i ;
-        }
-        
-        break;
-    case 'd'://gera o vetor de forma decrescente
-        for (i = 0; n > i; i--)
-        {
-            vetor[i] = i + 1;
-        }
 
-        break;
-    case 'r'://gera o vetor de forma randomica
-        for (i = 0; i < n; i++){
-            vetor[i] = RandomInteger(0, 3200);
-        }
-        break;
-    
-    default:
-        break;
-    }
+    vetor = (int*) malloc(n*sizeof(int));
 
+    geraVetor(vetor,n,tipoVetor);
 
-
+    printf("Vetor desorganizado : \n");
     for (i = 0; i < n; i++)
     {
         printf("[%d] ", vetor[i]);
     }
     printf("\n");
-    /*
+
     t = clock();
-    bubbleSort(vetor, TAM);
+    insertionSort(vetor,n);
     t = clock() - t;
-    for (i = 0; i < TAM; i++)
+
+    imprimeTimeVetor(vetor,n,t);
+    printf("\n");
+
+    geraVetor(vetor, n, tipoVetor);
+    t = clock();
+    bubbleSort(vetor, n);
+    t = clock() - t;
+
+    imprimeTimeVetor(vetor,n,t);
+
+
+
+
+/*
+    for (i = 0; i < n; i++)
     {
         printf("[%d] ", vetor[i]);
     }
-    printf("\nTempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));
-    */
+    printf("\nTempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));*/
+
     return 0;
 }
