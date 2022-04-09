@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 //*************************************
 //        Funçoes auxiliares
@@ -56,11 +57,12 @@ void geraVetor(int *V,int tam,char tipoVetor){
 }
 // imprime o vetor organizado com o tempo
 void imprimeTimeVetor(int *v,int tam,clock_t t){
+   /*
     for (int i = 0; i < tam; i++)
     {
         printf("[%d] ", v[i]);
-    }
-    printf("\nTempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));
+    }*/
+    printf("Tempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));
 }
 //*************************************
 //            InsertionSort
@@ -129,62 +131,67 @@ void bubbleSort(int *vet, int n)
 //            MergeSort
 //*************************************
 
-void merge(int *V, int inicio, int meio, int fim)
+void merge(int *v, int inicio, int meio, int fim)
 {
-    int p1 = inicio;
-    int p2 = meio + 1;
-    int n, j, k, i = 0;
+    int *temp;
+    int i, j, k;
+    int p1, p2;
+    int vecSize;
 
-    int vetSize = (fim - inicio) + 1;
-    int *vetAux;
-    vetAux = malloc(vetSize * sizeof(int));
+    bool finished1 = false;
+    bool finished2 = false;
 
-    while (p1 <= meio && p2 < fim)
+    vecSize = (fim - inicio) + 1;
+
+    p1 = inicio;
+    p2 = meio + 1;
+
+    temp = (int *)malloc(vecSize * sizeof(int));
+
+    if (temp != NULL)
     {
-        if (V[p1] < V[p2])
-        {
-            vetAux[i++] = V[p1++];
-        }
-        if (V[p2] < V[p1])
-        {
-            vetAux[i++] = V[p2++];
-        }
 
-        // Se P1 > meio, sobraram elementos em P2
-        if (p1 > meio)
+        for (i = 0; i < vecSize; i++)
         {
-            // sobram End - p2 + 1 elementos
-            n = fim - p2 + 1;
-            // copia os elementos que sobraram da parte da direita (p2)
-            for (j = 0; j < n; j++)
+
+            if (!finished1 && !finished2)
             {
-                vetAux[i++] = V[p2++];
+                if (v[p1] < v[p2])
+                {
+                    temp[i] = v[p1++];
+                }
+                else
+                {
+                    temp[i] = v[p2++];
+                }
+
+                /* checking if any sub vector finished */
+                if (p1 > meio)
+                {
+                    finished1 = true;
+                }
+                if (p2 > fim)
+                {
+                    finished2 = true;
+                }
             }
-        } // Senão, P2 > Fim, sobraram elementos em P1
-        else
-        {
-            // sobram Middle - p1 + 1 elementos
-            n = meio - p1 + 1;
-            // copia os elementos que sobraram da parte da esquerda (p1)
-            for (j = 0; j < n; j++)
+            else
             {
-                vetAux[i++] = V[p1++];
+                /* copying the remaining elements */
+                if (!finished1)
+                    temp[i] = v[p1++];
+                else
+                    temp[i] = v[p2++];
             }
         }
-
-        // copiar elementos do aux para v
-        // aux e v podem ter tamanhos diferentes
-        j = 0;
-        k = inicio;
-        while (j < vetSize)
+        /* copying elements from temp to v */
+        for (j = 0, k = inicio; j < vecSize; j++, k++)
         {
-            V[k] = vetAux[j];
-            j++;
-            k++;
+            v[k] = temp[j];
         }
-    }
 
-    free(vetAux);
+    } // if
+    free(temp);
 }
 void mergeSort(int *V, int inicio, int fim)
 {
@@ -194,21 +201,21 @@ void mergeSort(int *V, int inicio, int fim)
     {
         meio = ((inicio + fim) / 2);
         mergeSort(V, inicio, meio);
-        merge(V, inicio, meio, fim);
         mergeSort(V, meio + 1, fim);
+        merge(V, inicio, meio, fim);
     }
 }
 
 //*************************************
 //            QuickSort
 //*************************************
-// IMPLEMENTAR
+// IMPLEMENTAR Pagina 117
 void quickSort(){}
 //*************************************
 //            HeapSort
 //*************************************
-// IMPLEMENTAR
-
+// IMPLEMENTAR Pagina 103
+void heapSort(){}
 //*************************************
 //            Main
 //*************************************
@@ -236,29 +243,54 @@ int main()
     }
     printf("\n");
 
+    //InsertionSort
+    printf("InsertionSort : ");
     t = clock();
     insertionSort(vetor,n);
     t = clock() - t;
-
     imprimeTimeVetor(vetor,n,t);
     printf("\n");
 
     geraVetor(vetor, n, tipoVetor);
-    t = clock();
-    bubbleSort(vetor, n);
-    t = clock() - t;
-
-    imprimeTimeVetor(vetor,n,t);
-
-
-
-
-/*
+    /*printf("Vetor desorganizado : \n");
     for (i = 0; i < n; i++)
     {
         printf("[%d] ", vetor[i]);
     }
-    printf("\nTempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));*/
+    printf("\n");*/
+
+    // SelectionSort
+    printf("SelectionSort : ");
+    t = clock();
+    bubbleSort(vetor, n);
+    t = clock() - t;
+    imprimeTimeVetor(vetor,n,t);
+
+    geraVetor(vetor, n, tipoVetor);
+
+    printf("\n");
+    // BubbleSort
+    printf("BubbleSort : ");
+    t = clock();
+    bubbleSort(vetor, n);
+    t = clock() - t;
+    imprimeTimeVetor(vetor,n,t);
+    printf("\n");
+    geraVetor(vetor, n, tipoVetor);
+    // MergeSort
+    printf("MergeSort : ");
+    t = clock();
+    bubbleSort(vetor, n);
+    t = clock() - t;
+    imprimeTimeVetor(vetor,n,t);
+    printf("\n");
+
+    /*
+        for (i = 0; i < n; i++)
+        {
+            printf("[%d] ", vetor[i]);
+        }
+        printf("\nTempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));*/
 
     return 0;
 }
