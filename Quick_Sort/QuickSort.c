@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int RandomInteger(int low, int high)
 {
@@ -7,7 +8,7 @@ int RandomInteger(int low, int high)
     k = (rand() % high) + low;
     return k;
 }
-
+// Faz atroca de posição em um vetor
 void troca(int *a, int *b)
 {
     int aux;
@@ -15,45 +16,109 @@ void troca(int *a, int *b)
     *a = *b;
     *b = aux;
 }
-
-int Particiona(int *V, int inicio, int fim)
+// Gera um vetor
+void geraVetor(int *V, int tam, char tipoVetor)
 {
-    int esq = inicio;
-    int dir = fim;
-    int pivo = V[inicio];
+
+    int i, auxD = 0;
+    // Define o tipo de vetor a ser criado
+    switch (tipoVetor)
+    {
+    case 'c': // gera o vetor de forma crescente
+        for (i = 0; i < tam; i++)
+        {
+            V[i] = i + 1;
+        }
+
+        break;
+    case 'd': // gera o vetor de forma decrescente
+        for (i = tam; i > 0; i--)
+        {
+            V[auxD] = i;
+            auxD++;
+        }
+
+        break;
+    case 'r': // gera o vetor de forma randomica
+
+        for (i = 0; i < tam; i++)
+        {
+            V[i] = RandomInteger(0, 3200);
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+// imprime o vetor organizado com o tempo
+void imprimeTimeVetor(int *v, int tam, clock_t t)
+{
+    
+     for (int i = 0; i < 5; i++)
+     {
+         printf("[%d] ", v[i]);
+     }
+    printf("Tempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));
+}
+
+int particiona(int *V,int inicio, int fim){
+    int esq,dir,pivo,aux;
+    esq = inicio;
+    dir = fim;
+    pivo = V[inicio];
 
     while (esq < dir)
     {
-        while(V[esq] <= pivo && esq <= fim){
-            
+        while(V[esq] <= pivo){
+            esq++;
         }
-        while(V[dir] <= pivo && dir <= inicio){
-
+        while(V[dir] > pivo){
+            dir--;
         }
         if (esq < dir)
         {
-            troca(V[esq],V[dir]);
+            troca(&V[esq],&V[dir]);
         }
-    troca(V[dir],V[esq]);
-    
     }
-    
+    V[inicio] = V[dir];
+    V[dir] = pivo;
+    return dir;
 
-    return (dir);
 }
 
-void quickSort(int *V, int inicio, int fim)
-{
-
+void quickSort(int *V, int inicio, int fim){
     int pivo;
-
-    if (inicio < fim)
+    if (fim > inicio)
     {
-        pivo = Particiona(V, inicio, fim);
-        quickSort(V, inicio, pivo - 1);
-        quickSort(V, pivo + 1, fim);
-    }
+        pivo = particiona(V,inicio,fim);
+        quickSort(V,inicio,pivo-1);
+        quickSort(V,pivo+1,fim);
+     }
+    
 }
-void main()
+
+int main()
 {
+    int vetor[5] = {5, 9, 3, 7, 1};
+    int i, n, auxD = 0;
+    char tipoVetor;
+    clock_t t;
+
+    printf("Vetor desorganizado : \n");
+    for (i = 0; i < 5; i++)
+    {
+        printf("[%d] ", vetor[i]);
+    }
+    printf("\n");
+
+    // quickSort
+    printf("InsertionSort : ");
+    t = clock();
+    quickSort(vetor,0,5);
+    t = clock() - t;
+    imprimeTimeVetor(vetor, n, t);
+    printf("\n");
+
+    return 0;
 }
