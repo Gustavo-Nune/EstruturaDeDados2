@@ -298,25 +298,40 @@ int main()
 {
     int *vetor,*vetAux;
     int i, n, auxD = 0;
+    char msgErro[18] = {"Arquivo invalido!!"};
     char tipoVetor ;
     clock_t t;
 
-    printf("Tipo do vetor:\nc - crescente\nd - decrescente\nr - randomico\n ");
-    scanf("%s", &tipoVetor);
-    printf("Digite o tamanho do vetor : ");
-    scanf("%d", &n);
+    FILE *arqEntrada = fopen("input1.txt","r");
+    FILE *arqSaida = fopen("saida.txt","w");
+
+    fscanf(arqEntrada, "%d", &n);
+    fscanf(arqEntrada, "\n%c", &tipoVetor);
+
+    //-----------------------------------------
+    //--------  Verifica erros ----------------
+    //-----------------------------------------
+
+    if (arqEntrada == NULL || arqSaida == NULL)
+    {
+        printf("\n\n#### Ocorreu um erro ao abrir o arquivo ####\n#### O programa esta sendo encerrado ####\n\n");
+        exit(1);
+    }
+    if (tipoVetor != 'c' && tipoVetor != 'd' && tipoVetor != 'r')
+    {
+        printf("\n\n#### Opcao de Vetor invalida ####\n#### O programa esta sendo encerrado ####\n\n");
+        fwrite(&msgErro, sizeof(char), 18, arqSaida);
+        exit(1);
+    }
+
+    printf("O vetor eh : %c \n E tem tamanho de : %d\n", tipoVetor,n);
 
     vetor = (int*) malloc(n*sizeof(int));
     vetAux = (int*) malloc(n*sizeof(int));
     geraVetor(vetor,n,tipoVetor);
 
-    for ( i = 0; i < n; i++)
-    {
-    vetAux[i] = vetor[i];
-        
-    }
+    for ( i = 0; i < n; i++){vetAux[i] = vetor[i];}
     
-
     printf("Vetor desorganizado : \n");
     for (i = 0; i < n; i++)
     {
@@ -335,6 +350,7 @@ int main()
     t = clock() - t;
     imprimeTimeVetor(vetor,n,t);
     printf("\n");
+    fprint(arqSaida,%d,vetor);
     //geraVetor(vetor, n, tipoVetor);
     for (i = 0; i < n; i++)
     {
@@ -393,13 +409,6 @@ int main()
     t = clock() - t;
     imprimeTimeVetor(vetor,n,t);
     printf("\n");
-
-    /*
-        for (i = 0; i < n; i++)
-        {
-            printf("[%d] ", vetor[i]);
-        }
-        printf("\nTempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));*/
 
     return 0;
 }
