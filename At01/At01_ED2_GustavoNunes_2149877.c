@@ -56,13 +56,13 @@ void geraVetor(int *V,int tam,char tipoVetor){
     }
 }
 // imprime o vetor organizado com o tempo
-void imprimeTimeVetor(int *v,int tam,clock_t t){
+void imprimeTimeVetor(int *v,int tam,clock_t t,FILE *arqSaida){
    
     for (int i = 0; i < tam; i++)
     {
-        printf("%d ", v[i]);
+        fprintf(arqSaida,"%d ", v[i]);
     }
-    printf("Tempo de execucao: %lf", ((double)t) / ((CLOCKS_PER_SEC / 1000)));
+    fprintf(arqSaida,",  comp, Tempo de execucao: %lf\n", ((double)t) / ((CLOCKS_PER_SEC / 1000)));
 }
 //*************************************
 //            InsertionSort
@@ -324,7 +324,7 @@ int main()
         exit(1);
     }
 
-    printf("O vetor eh : %c \n E tem tamanho de : %d\n", tipoVetor,n);
+    printf("O vetor eh : %c \nE tem tamanho de : %d\n", tipoVetor,n);
 
     vetor = (int*) malloc(n*sizeof(int));
     vetAux = (int*) malloc(n*sizeof(int));
@@ -344,71 +344,62 @@ int main()
     //-----------------------------------------
 
     //InsertionSort
-    printf("InsertionSort : ");
+    fprintf(arqSaida,"InsertionSort : ");
     t = clock();
     insertionSort(vetor,n);
     t = clock() - t;
-    imprimeTimeVetor(vetor,n,t);
-    printf("\n");
-    fprint(arqSaida,%d,vetor);
-    //geraVetor(vetor, n, tipoVetor);
+    imprimeTimeVetor(vetor,n,t,arqSaida);
+    
     for (i = 0; i < n; i++)
     {
         vetor[i] = vetAux[i];
     }
     // SelectionSort
-    printf("SelectionSort : ");
+    fprintf(arqSaida,"SelectionSort : ");
     t = clock();
     bubbleSort(vetor, n);
     t = clock() - t;
-    imprimeTimeVetor(vetor,n,t);
-    //geraVetor(vetor, n, tipoVetor);
+    imprimeTimeVetor(vetor,n,t,arqSaida);
     for (i = 0; i < n; i++)
     {
         vetor[i] = vetAux[i];
     }
-    printf("\n");
     // BubbleSort
-    printf("BubbleSort : ");
+    fprintf(arqSaida,"BubbleSort : ");
     t = clock();
     bubbleSort(vetor, n);
     t = clock() - t;
-    imprimeTimeVetor(vetor,n,t);
-    printf("\n");
-    //geraVetor(vetor, n, tipoVetor);
+    imprimeTimeVetor(vetor,n,t,arqSaida);
     for (i = 0; i < n; i++)
     {
         vetor[i] = vetAux[i];
     }
     // MergeSort
-    printf("MergeSort : ");
+    fprintf(arqSaida,"MergeSort : ");
     t = clock();
     bubbleSort(vetor, n);
     t = clock() - t;
-    imprimeTimeVetor(vetor,n,t);
-    printf("\n");
+    imprimeTimeVetor(vetor,n,t,arqSaida);
     for (i = 0; i < n; i++)
     {
         vetor[i] = vetAux[i];
     }
     // QuickSort
-    printf("QuickSort : ");
+    fprintf(arqSaida,"QuickSort : ");
     t = clock();
     quickSort(vetor,0, n);
     t = clock() - t;
-    imprimeTimeVetor(vetor,n,t);
-    printf("\n");
+    imprimeTimeVetor(vetor,n,t,arqSaida);
     for (i = 0; i < n; i++)
     {
         vetor[i] = vetAux[i];
     }
     // HeapSort
-    printf("HeapSort : ");
+    fprintf(arqSaida,"HeapSort : ");
     t = clock();
     heapSort(vetor, n);
     t = clock() - t;
-    imprimeTimeVetor(vetor,n,t);
-    printf("\n");
+    imprimeTimeVetor(vetor,n,t,arqSaida);
 
     return 0;
 }
